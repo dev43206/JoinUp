@@ -1,0 +1,7 @@
+# Node dependencies
+/server/node_modules/
+/client/node_modules/
+
+# Environment files
+/server/.env
+/client/.env
