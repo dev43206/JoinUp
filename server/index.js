@@ -3,6 +3,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
+const eventRoutes = require('./routes/events');
+const bookingRoutes = require('./routes/booking');
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ app.use(express.json());
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/events',eventRoutes);
+app.use('/api/bookings',bookingRoutes)
 
 
 const PORT = process.env.PORT || 5000;

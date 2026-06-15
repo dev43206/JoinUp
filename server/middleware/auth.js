@@ -5,10 +5,10 @@ const user = require('../models/User');
 
 // user authentication middleware to protect routes
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
     const token = req.headers.authorization && req.headers.authorization.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null;
 
-    if (!token) {
+    if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = await user.findById(decoded.id).select('-password');
