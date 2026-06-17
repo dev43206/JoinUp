@@ -41,56 +41,64 @@ exports.registerUser = async (req, res) => {
 
 //Login User
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body;
-
-    let user = await User.findOne({ email });
-    if (!user) {
-        return res.status(400).json({ error: 'Invalid credentials Please sign up first' });
-    } 
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(400).json({ error: 'Invalid credentials' });
-    }
-
-    if(!user.isverified && user.role === 'user') {
-
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        await Otp.deleteMany({ email, action: 'account_verification' });
-        await Otp.create({ email, otp, action: 'account_verification' });
-        await sendOtpEmail(email, otp, 'account_verification');
-
-        res.status(400).json({
-            error: 'Account not verified. Please check your email for the OTP to verify your account.',
+    try {
+        const { email, password } = req.body;
+    
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid credentials Please sign up first' });
+        } 
+    
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+    
+        if(!user.isverified && user.role === 'user') {
+    
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            await Otp.deleteMany({ email, action: 'account_verification' });
+            await Otp.create({ email, otp, action: 'account_verification' });
+            await sendOtpEmail(email, otp, 'account_verification');
+    
+            return res.status(400).json({
+                error: 'Account not verified. Please check your email for the OTP to verify your account.',
+            });
+                
+        }
+    
+        res.json({ message: 'Login successful', 
+            _id: user._id, name: user.name,
+            email: user.email, role: user.role,
+            token: generateToken(user._id,user.role)
         });
-            
+    } catch (error) {
+        res.status(500).json({message : 'Server Error',error: error.message});
     }
-
-    res.json({ message: 'Login successful', 
-        _id: user._id, name: user.name,
-        email: user.email, role: user.role,
-        token: generateToken(user._id,user.role)
-    });
         
 };
 
 
 
 exports.verifyOtp = async (req, res) => {
-    const { email, otp, action } = req.body;
-    const otpRecord = await Otp.findOne({ email, otp, action: 'account_verification' });
-
-    if (!otpRecord) {
-        return res.status(400).json({ error: 'Invalid or expired OTP' });
+    try {
+        const { email, otp } = req.body;
+        const otpRecord = await Otp.findOne({ email, otp, action: 'account_verification' });
+    
+        if (!otpRecord) {
+            return res.status(400).json({ error: 'Invalid or expired OTP' });
+        }
+    
+        const user = await User.findOneAndUpdate({ email }, { isverified: true },{new: true});
+        await Otp.deleteOne({_id: otpRecord._id}); // remove used OTPs
+    
+        res.json({ 
+            message: 'Account verified successfully. You can now log in.' ,
+            _id: user._id, name: user.name,
+            email: user.email, role: user.role,
+            token: generateToken(user._id,user.role)
+        });
+    } catch (error) {
+        res.status(500).json({message : 'Server Error'});
     }
-
-    const user = await User.findOneAndUpdate({ email }, { isverified: true });
-    await Otp.deleteMany({ email, action: 'account_verification' }); // remove used OTPs
-
-    res.json({ 
-        message: 'Account verified successfully. You can now log in.' ,
-        _id: user._id, name: user.name,
-        email: user.email, role: user.role,
-        token: generateToken(user._id,user.role)
-    });
 }

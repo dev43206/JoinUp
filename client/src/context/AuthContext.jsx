@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import api from "../utils/axios";   // adjust path if different
+
+
 export const AuthContext = React.createContext();
 
 
@@ -28,17 +31,16 @@ export const AuthProvider = ({children}) =>{
         }
     };
 
-    const verifyOtp = async () =>{
+    const verifyOtp = async (email,otp) =>{
         try{
-            const {data} = await api.post('/auth/verify-otp');
+            const {data} = await api.post('/auth/verify-otp',{email,otp});
             setUser(data);
-            localStorage.setItem("user",JSON.stringify(data));
+            localStorage.setItem("userInfo",JSON.stringify(data));
             localStorage.setItem("token",data.token);
             return data;
         }
-        catch(err){
-            console.error("Login failed:",err);
-            throw err;
+        catch(error){
+            throw error.response?.data?.message || 'OTP verification failed';
         }
     }
 
@@ -51,12 +53,10 @@ export const AuthProvider = ({children}) =>{
     const register = async (name,email,password) =>{
         try{
             const {data} = await api.post('/auth/register',{name,email,password});
-            setUser(data);
             return data;
         }
-        catch(err){
-            console.error("Registration failed:",err);
-            throw err;
+        catch(error){
+            throw error.response?.data?.message ||'Registration Failed';
         }
     }
 
