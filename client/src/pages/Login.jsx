@@ -40,10 +40,10 @@ const Login = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-20 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+        <div className="max-w-md mx-auto mt-20 bg-[#444346]/67 p-8 rounded-xl shadow-md border ">
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome Back</h2>
-                <p className="text-gray-500">Sign in to your JoinUP account</p>
+                <h2 className="text-3xl font-extrabold text-[#2EF82B]/71 mb-2">Welcome Back</h2>
+                <p className="text-white">Sign in to your JoinUP account</p>
             </div>
 
             {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-center shadow-inner border border-red-100">{error}</div>}
@@ -52,21 +52,21 @@ const Login = () => {
                 {!showOTP ? (
                     <>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <label className="block text-sm font-semibold text-white mb-2">Email Address</label>
                             <input
                                 type="email"
                                 required
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition shadow-sm"
+                                className="w-full px-4 py-3 rounded-lg border border-white focus:ring-2 focus:ring-white focus:border-white transition shadow-sm text-white"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <label className="block text-sm font-semibold text-white mb-2">Password</label>
                             <input
                                 type="password"
                                 required
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-700 focus:border-gray-700 transition shadow-sm"
+                                className="w-full px-4 py-3 rounded-lg border border-white focus:ring-2 focus:ring-white focus:border-white transition shadow-sm text-white"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -89,14 +89,14 @@ const Login = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gray-900 text-white font-bold py-3 rounded-lg hover:bg-black focus:ring-4 focus:ring-gray-200 transition shadow-md"
+                    className="w-full bg-[#2EF82B]/71 text-[#130F0F] font-bold py-3 rounded-lg hover:bg-[#130F0F] hover:text-[#2EF82B]/71 focus:ring-4 focus:ring-[#2EF82B]/71 transition shadow-md"
                 >
                     {loading ? 'Processing...' : (showOTP ? 'Verify OTP & Log In' : 'Sign In')}
                 </button>
             </form>
 
-            <p className="text-center mt-8 text-gray-600">
-                Don't have an account? <Link to="/register" className="text-gray-900 font-bold hover:underline">Sign up</Link>
+            <p className="text-center mt-8 text-white">
+                Don't have an account? <Link to="/register" className="text-[#2EF82B]/71 font-bold hover:underline">Sign up</Link>
             </p>
         </div>
     );

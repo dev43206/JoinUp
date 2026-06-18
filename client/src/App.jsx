@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Router>
-      <div className='min-h-screen bg-gray-50 flex flex-col'>
+      <div className='min-h-screen bg-[#130F0F] flex flex-col'>
         <Navbar />
         <main className='flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8'>
           <Routes>
