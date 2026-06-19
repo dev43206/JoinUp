@@ -1,5 +1,5 @@
 const Booking = require('../models/Bookings.js');
-const Otp = require('../models/Otp');
+const Otp = require('../models/otp');
 const Event = require('../models/Events');
 const {sendOtpEmail, sendBookingEmail} = require('../utils/email');
 
