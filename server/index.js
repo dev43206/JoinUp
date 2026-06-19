@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 const authRoutes = require('./routes/auth');
 const eventRoutes = require('./routes/events');
 const bookingRoutes = require('./routes/booking');
@@ -23,6 +25,16 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/events',eventRoutes);
 app.use('/api/bookings',bookingRoutes)
+
+const clientBuildPath = path.join(__dirname, '..', 'client', 'dist');
+
+if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+
+    app.get(/.*/, (req, res) => {
+        res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+}
 
 
 const PORT = process.env.PORT || 5000;
