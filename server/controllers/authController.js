@@ -51,7 +51,7 @@ exports.loginUser = async (req, res) => {
     
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials : Incorrect Password' });
         }
     
         if(!user.isverified && user.role === 'user') {
@@ -62,7 +62,8 @@ exports.loginUser = async (req, res) => {
             await sendOtpEmail(email, otp, 'account_verification');
     
             return res.status(400).json({
-                error: 'Account not verified. Please check your email for the OTP to verify your account.',
+                message: 'Account not verified. Please check your email for the OTP to verify your account.',
+                needsVerification: true
             });
                 
         }

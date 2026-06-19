@@ -85,9 +85,9 @@ const Home = () => {
             </div>
 
             {loading ? (
-                <div className="text-center py-20 text-xl font-semibold text-gray-600">Loading events...</div>
+                <div className="text-center py-20 text-xl font-semibold text-white">Loading events...</div>
             ) : events.length === 0 ? (
-                <div className="text-center py-20 text-xl bg-[#444346]/67">No events found matching your search.</div>
+                <div className="text-center py-20 text-xl bg-[#444346]/67 text-white">No events found matching your search.</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {events.map(event => (
@@ -118,8 +118,8 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <div className="mt-auto">
-                                    <div className="w-full bg-white rounded-full h-2 mb-2">
-                                        <div className="bg-[#2EF82B]/71 h-2 rounded-full" style={{ width: `${(event.availableSeats / event.totalSeats) * 100}%` }}></div>
+                                    <div className="w-full bg-[#2EF82B]/71 rounded-full h-2 mb-2">
+                                        <div className="bg-white h-2 rounded-full" style={{ width: `${(event.availableSeats / event.totalSeats) * 100}%` }}></div>
                                     </div>
                                     <p className="text-xs text-white mb-4">{event.availableSeats} of {event.totalSeats} seats remaining</p>
                                     <Link to={`/events/${event._id}`} className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold py-2 rounded-lg transition">

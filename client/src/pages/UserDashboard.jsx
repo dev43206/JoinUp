@@ -36,7 +36,7 @@ const UserDashboard = () => {
                 await api.delete(`/bookings/${id}`);
                 fetchBookings();
             } catch (error) {
-                alert(error.response?.data?.message || 'Error cancelling booking');
+                alert(error.response?.data?.message||error.response?.data?.error || 'Error cancelling booking');
             }
         }
     };
@@ -98,9 +98,9 @@ const UserDashboard = () => {
                                             </div>
                                         </div>
                                         <div className="text-sm text-white mb-4 space-y-1">
-                                            <p><strong className="text-[#fa08f6]">Date:</strong> {new Date(booking.eventId.date).toLocaleDateString()}</p>
-                                            <p><strong className="text-[#fa08f6]">Amount:</strong> {booking.amount === 0 ? 'Free' : `₹${booking.amount}`}</p>
-                                            <p><strong className="text-[#fa08f6]">Requested:</strong> {new Date(booking.bookedAt).toLocaleDateString()}</p>
+                                            <p><strong className="text-indigo-600">Date:</strong> {new Date(booking.eventId.date).toLocaleDateString()}</p>
+                                            <p><strong className="text-indigo-600">Amount:</strong> {booking.amount === 0 ? 'Free' : `₹${booking.amount}`}</p>
+                                            <p><strong className="text-indigo-600">Requested:</strong> {new Date(booking.bookedAt).toLocaleDateString()}</p>
                                         </div>
                                     </>
                                 ) : (

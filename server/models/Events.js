@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    image: {
+        type: String,
+        required: false
     }
 },{timestamps: true});
 

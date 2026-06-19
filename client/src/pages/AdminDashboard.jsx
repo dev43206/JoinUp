@@ -70,7 +70,7 @@ const AdminDashboard = () => {
             await api.put(`/bookings/${id}/confirm`, { paymentStatus });
             fetchData();
         } catch (error) {
-            alert(error.response?.data?.message || 'Error confirming booking');
+            alert(error.response?.data?.message||error.response?.data?.error || 'Error confirming booking');
         }
     };
 
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
                 await api.delete(`/bookings/${id}`);
                 fetchData();
             } catch (error) {
-                alert(error.response?.data?.message || 'Error cancelling booking');
+                alert(error.response?.data?.message ||error.response?.data?.error|| 'Error cancelling booking');
             }
         }
     };

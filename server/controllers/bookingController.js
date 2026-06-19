@@ -1,5 +1,5 @@
 const Booking = require('../models/Bookings.js');
-const Otp = require('../models/Otp.js');
+const Otp = require('../models/Otp');
 const Event = require('../models/Events');
 const {sendOtpEmail, sendBookingEmail} = require('../utils/email');
 
@@ -36,7 +36,7 @@ exports.bookEvent = async (req,res) =>{
         return res.status(400).json({ error: 'No seats available for this event' });
     }
 
-    const existingBooking = await Booking.findOne({ user: req.user._id, event: eventId });
+    const existingBooking = await Booking.findOne({ userId: req.user._id, eventId });
     if(existingBooking){
         return res.status(400).json({ error: 'You have already booked this event' });
     }
@@ -91,10 +91,10 @@ exports.bookEvent = async (req,res) =>{
 
 exports.confirmBooking = async (req,res)=>{
     const paymentStatus = req.body.paymentStatus;
-    if(!['paid','non_paid'].includes(paymentStatus)){
+    if(!['paid','not_paid'].includes(paymentStatus)){
         return res.status(400).json({error: 'Invalid payment status'});
     }
-    const booking = await Booking.findById(req.params.id).populate('eventId');
+    const booking = await Booking.findById(req.params.id).populate('eventId').populate('userId', 'name email');
     if(!booking){
         return res.status(404).json({error: 'Booking not found'});
     }
@@ -116,7 +116,7 @@ exports.confirmBooking = async (req,res)=>{
     await event.save();
 
     //admin confirmation email to user
-    await sendBookingEmail(req.user.email,event.title,booking._id);
+    await sendBookingEmail(booking.userId?.email || req.user.email,event.title,booking._id);
 
     res.json({message: 'Booking confirmed'})
 };
@@ -143,10 +143,11 @@ exports.cancelBooking = async(req,res) =>{
         return res.status(403).json({error:'Unauthorized'});
     }
 
+    const wasConfirmed = booking.status === 'confirmed';
     booking.status = 'cancelled';
     await booking.save();
 
-    if(booking.status === 'confirmed'){
+    if(wasConfirmed){
         const event = await Event.findById(booking.eventId._id);
         event.totalSeats += 1;
         await event.save();

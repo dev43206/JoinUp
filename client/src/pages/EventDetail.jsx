@@ -20,6 +20,8 @@ const EventDetail = () => {
         const fetchEvent = async () => {
             try {
                 const { data } = await api.get(`/events/${id}`);
+                // console.log(data);
+                // console.log(data.image);
                 setEvent(data);
             } catch (err) {
                 setError('Failed to load event details.');
@@ -64,7 +66,7 @@ const EventDetail = () => {
     const isSoldOut = event.availableSeats <= 0;
 
     return (
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden mt-8">
+        <div className="max-w-4xl mx-auto bg-[#444346]/67 rounded-2xl shadow-xl overflow-hidden mt-8">
             {event.image ? (
                 <img src={event.image} alt={event.title} className="w-full h-80 object-cover" />
             ) : (
@@ -79,8 +81,8 @@ const EventDetail = () => {
                         <div className="inline-block bg-gray-200 text-gray-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
                             {event.category}
                         </div>
-                        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{event.title}</h1>
-                        <p className="text-gray-600 text-lg leading-relaxed mb-6">{event.description}</p>
+                        <h1 className="text-4xl font-extrabold text-[#2EF82B]/71 mb-4">{event.title}</h1>
+                        <p className="text-white text-lg leading-relaxed mb-6">{event.description}</p>
                     </div>
 
                     <div className="bg-gray-50 p-6 rounded-xl border border-gray-100 min-w-[300px] w-full md:w-auto shrink-0 shadow-sm">

@@ -64,7 +64,7 @@ createEvent = async (req, res) => {
             availableSeats: totalSeats,
             ticketPrice: ticketPrice || 0,
             image: image || '',
-            createdBy: req.user.id
+            createdBy: req.user._id
         });
         res.status(201).json(event);
     } catch (error) {
@@ -73,22 +73,29 @@ createEvent = async (req, res) => {
 };
 
 updateEvent = async (req, res) => {
-    const { title, description, date, location, category, ticketPrice } = req.body;
     try {
-        const event = await Event.findByIdAndUpdate(req.params.id,{
-            title,
-            description,
-            date,
-            location,
-            category,
-            ticketPrice,
-            totalSeats,
-            imaegeUrl
-         },{new: true
-        });
+        const event = await Event.findById(req.params.id);
         if (!event) {
             return res.status(404).json({ error: 'Event not found' });
         }
+
+        const { title, description, date, location, category, totalSeats, ticketPrice, image } = req.body;
+
+        if (title !== undefined) event.title = title;
+        if (description !== undefined) event.description = description;
+        if (date !== undefined) event.date = date;
+        if (location !== undefined) event.location = location;
+        if (category !== undefined) event.category = category;
+        if (ticketPrice !== undefined) event.ticketPrice = ticketPrice;
+        if (image !== undefined) event.image = image;
+
+        if (totalSeats !== undefined) {
+            const nextTotalSeats = Number(totalSeats);
+            event.totalSeats = nextTotalSeats;
+            event.availableSeats = Math.min(event.availableSeats ?? nextTotalSeats, nextTotalSeats);
+        }
+
+        await event.save();
         res.json(event);
     } catch (error) {
         res.status(500).json({ error: error.message });

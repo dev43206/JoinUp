@@ -29,7 +29,6 @@ const Register = () => {
             }
         } catch (err) {
             setError(
-            err.response?.data?.error ||
             err.message ||
             "Something went wrong"
             );
@@ -86,12 +85,12 @@ const Register = () => {
                         <p className="text-sm text-green-700 bg-green-50 p-3 mb-4 rounded border border-green-200">
                             An OTP has been sent to your email. Please verify your account.
                         </p>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Verification Code (OTP)</label>
+                        <label className="block text-sm font-semibold text-white mb-2">Verification Code (OTP)</label>
                         <input
                             type="text"
                             required
                             placeholder="6-digit code"
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-700 transition shadow-sm font-bold tracking-widest text-center text-lg"
+                            className="w-full px-4 py-3 rounded-lg border border-white focus:ring-2 focus:ring-white transition shadow-sm font-bold tracking-widest text-center text-lg text-white" 
                             value={otp}
                             onChange={(e) => setOtp(e.target.value)}
                             maxLength="6"
