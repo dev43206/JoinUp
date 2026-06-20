@@ -1,7 +1,7 @@
 const Booking = require('../models/Bookings.js');
 const Otp = require('../models/otp');
 const Event = require('../models/Events');
-const {sendOtpEmail, sendBookingEmail} = require('../utils/email');
+const {sendOtpEmail, sendBookingEmail, sendEmailInBackground} = require('../utils/email');
 
 const generateOtp = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -11,7 +11,10 @@ exports.sendBookingOtp = async (req, res) => {
     const otp1 = generateOtp();
     await Otp.findOneAndDelete({email:req.user.email,action:'event_booking'});
     await Otp.create({email:req.user.email,otp:otp1,action:'event_booking'});
-    await sendOtpEmail(req.user.email, otp1, 'event_booking');
+    sendEmailInBackground(
+        sendOtpEmail(req.user.email, otp1, 'event_booking'),
+        `event booking OTP to ${req.user.email}`
+    );
 
     res.json({message: 'Otp sent to email'});
         
@@ -116,7 +119,10 @@ exports.confirmBooking = async (req,res)=>{
     await event.save();
 
     //admin confirmation email to user
-    await sendBookingEmail(booking.userId?.email || req.user.email,event.title,booking._id);
+    sendEmailInBackground(
+        sendBookingEmail(booking.userId?.email || req.user.email, booking.userId?.name || 'there', event.title),
+        `booking confirmation to ${booking.userId?.email || req.user.email}`
+    );
 
     res.json({message: 'Booking confirmed'})
 };

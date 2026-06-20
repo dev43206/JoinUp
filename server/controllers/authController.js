@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Otp = require('../models/otp');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { sendOtpEmail } = require('../utils/email');
+const { sendOtpEmail, sendEmailInBackground } = require('../utils/email');
 
 const generateToken = (id,role) => {
     // Token generation logic here
@@ -26,7 +26,10 @@ exports.registerUser = async (req, res) => {
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
         console.log(`OTP for ${email}: ${otp}`);
         await Otp.create({ email, otp, action: 'account_verification' });
-        await sendOtpEmail(email, otp, 'account_verification');
+        sendEmailInBackground(
+            sendOtpEmail(email, otp, 'account_verification'),
+            `account verification OTP to ${email}`
+        );
 
         res.status(201).json({ message: 'User registered successfully. Please verify your email.',
             email: user.email
@@ -59,7 +62,10 @@ exports.loginUser = async (req, res) => {
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             await Otp.deleteMany({ email, action: 'account_verification' });
             await Otp.create({ email, otp, action: 'account_verification' });
-            await sendOtpEmail(email, otp, 'account_verification');
+            sendEmailInBackground(
+                sendOtpEmail(email, otp, 'account_verification'),
+                `account verification OTP to ${email}`
+            );
     
             return res.status(400).json({
                 message: 'Account not verified. Please check your email for the OTP to verify your account.',
