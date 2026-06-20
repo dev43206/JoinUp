@@ -1,10 +1,15 @@
+const dns = require('dns');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 
 dotenv.config();
+dns.setDefaultResultOrder('ipv4first');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
     pool: true,
     maxConnections: 3,
     maxMessages: 50,
